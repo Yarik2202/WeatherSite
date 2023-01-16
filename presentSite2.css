@@ -1,0 +1,45 @@
+body {
+    background-image: url(./background_Image/1616367309_40-p-fon-dlya-saita-44.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 20px 10px;
+}
+.metric {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: rgb(229, 236, 25);
+    
+   
+}
+
+.metric div {
+    padding-left: 20px;
+}
+
+main {
+    margin-top: 80px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+
+
+.accordion {
+    width: 25%;
+}
+
+.accordion-body {
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+   
+}
