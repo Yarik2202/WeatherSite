@@ -1,18 +1,39 @@
 let formGetSityName = document.getElementById('search_city');
-    formGetSityName.addEventListener('submit', getWeather);
+formGetSityName.addEventListener('submit', getWeather);
+
+let select = document.getElementById('value_metric');    
+select.addEventListener('change', changeHandlerSelect);
+
+let unitsLocal = 'units';
+
+select.value = localStorage.getItem(unitsLocal) || 'metric';
 
 let keyAPI = 'd3ee05676227b74a4aed89cdf0de4f9f';
 
 let putInfo = document.getElementById('accordionPanelsStayOpenExample');
 
-let select = document.getElementById('value_metric');
-    
+ 
+console.log(select.value);
+
 let units;
 
+let cityLocal = "cityLocal";
+
+
+
+function changeHandlerSelect() {
+    
+    localStorage.setItem(unitsLocal, select.value);
+    getWeather()
+}
 
 function getWeather(event) {
     
     let cityName = getNameCity(event);
+
+    localStorage.setItem(cityLocal, cityName);
+
+    putCityName(cityName);
 
     units = select.value;
 
@@ -20,8 +41,7 @@ function getWeather(event) {
 
     let weatherData = getWeatherInfo (fetchURL);
 
-
-
+    
 }
 
 function getNameCity(event) {
@@ -29,6 +49,8 @@ function getNameCity(event) {
         event.preventDefault();
     let inputEl = document.querySelector('.search');
     return inputEl.value;
+    } else if (localStorage.getItem('cityLocal')) {
+        return localStorage.getItem('cityLocal');
     } else {
         return 'Ivano-Frankivsk'
     }
@@ -86,6 +108,14 @@ function getHourArr (list, i) {
     return hour;
 }
 
+function putCityName(cityName) {
+    let divCity = document.querySelector('.city_name');
+    divCity.innerHTML = cityName.split('').map((item, index)=> {
+        return (index === 0) ? item.toUpperCase() : item
+    }).join('');
+    
+}
+
 function formatInfoHTML(arr) {
    
    function showDate(arr) {
@@ -118,7 +148,7 @@ function formatInfoHTML(arr) {
     
    let arrDATE = showDate(arr);
    
-    let arr2 = [];
+    let arrItem = [];
 
    for(let i = 0; i < arr.length; i++) {
 
@@ -131,7 +161,7 @@ function formatInfoHTML(arr) {
            </div>
          </button>
        </h2>
-       <div id="panelsStayOpen-collapse${i}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading${i}">
+       <div id="panelsStayOpen-collapse${i}" class="accordion-collapse collapse ${(i === 0) ? 'show' : ''}" aria-labelledby="panelsStayOpen-heading${i}">
          <div class="accordion-body">
            <div>
                  <div>
@@ -158,13 +188,13 @@ function formatInfoHTML(arr) {
            </div>
            <div class="putINFO">
                 <div>
-                    ${arr[i].main.temp} <sup>o</sup>C
+                    ${arr[i].main.temp} ${(units === 'metric') ? '<sup>o</sup>C' :'K'}
                 </div>
                 <div>
-                    ${arr[i].main.feels_like} <sup>o</sup>C
+                    ${arr[i].main.feels_like} ${(units === 'metric') ? '<sup>o</sup>C' :'K'}
                 </div>
                 <div>
-                    ${arr[i].main.temp_min} - ${arr[i].main.temp_max} <sup>o</sup>C
+                    ${arr[i].main.temp_min} - ${arr[i].main.temp_max} ${(units === 'metric') ? '<sup>o</sup>C' :'K'}
                 </div>
                 <div>
                     ${arr[i].main.pressure}
@@ -184,13 +214,17 @@ function formatInfoHTML(arr) {
      </div>
 
     ` 
-    arr2.push(template);
+    arrItem.push(template);
     
 
    }
 
-   let arr2Join = arr2.join('');
+   let arrItemJoin = arrItem.join('');
 
-   putInfo.innerHTML = arr2Join;
+   putInfo.innerHTML = arrItemJoin;
    
 }
+
+
+
+getWeather();
